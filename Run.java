@@ -107,6 +107,16 @@ public class Run {
 				}
 			}
 
+			String furtherMotifInstanceLocations = "";
+			for (int instance = 0; instance < sx.size(); instance++) {
+				if ((instance == p1) || (instance == p2)) {
+					// the best motifs are added separately.
+					continue;
+				}
+
+				furtherMotifInstanceLocations += " " + sx.get(instance).getStart() + " " + sx.get(instance).getEnd();
+			}
+
 			if (dmin >= 1000000)
 				continue;
 
@@ -114,8 +124,11 @@ public class Run {
 
 			if (i % 10000 == 0)
 				System.out.println(i + " Out of " + seed.size());
-			System.out.println("Motif: " + sx.get(p1).getStart() + " " + sx.get(p1).getEnd() + " " + sx.get(p2).getStart()
-			    + " " + sx.get(p2).getEnd() + " " + l + " " + dmin + " " + c);
+
+			System.out.println(
+				"Motif: " + l + " " + dmin + " " + c + " " + sx.get(p1).getStart() + " " + sx.get(p1).getEnd() + " " +
+				sx.get(p2).getStart() + " " + sx.get(p2).getEnd() + furtherMotifInstanceLocations
+			);
 		}
 	}
 
