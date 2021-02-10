@@ -18,7 +18,7 @@ res.txt is the motif discovery result.
 
 ## Output Format
 
-[First Instance Start Location][First Instance End Location][Second Instance Start Location][Second Instance End Location][Length][Distance]
+[Length][Distance][Amount][Best Instance 1 Start Location][Best Instance 1 End Location][Best Instance 2 Start Location][Best Instance 2 End Location][Further Instance Start Location][Further Instance End Location]…[Amounth Instance Start Location][Amounth Instance End Location]
 
 
 ## How to Visualize Result
