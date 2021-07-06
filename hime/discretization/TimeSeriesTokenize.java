@@ -110,9 +110,9 @@ public class TimeSeriesTokenize {
 			}
 		}
 		buffer=new double[this.saxWindowSize];
-    decoder.onMalformedInput(CodingErrorAction.IGNORE);
-    input=new FileInputStream(files);
-    InputStreamReader readers = new InputStreamReader(input, decoder);
+        decoder.onMalformedInput(CodingErrorAction.IGNORE);
+        input=new FileInputStream(files);
+        InputStreamReader readers = new InputStreamReader(input, decoder);
 		reader =new BufferedReader(readers);
 	}
 
