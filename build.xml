@@ -15,8 +15,12 @@
             </fileset>
         </copy>
     </target>
+    <target name="initgraal">
+        <mkdir dir="graalvm"/>
+    </target>
     <target name="clean">
         <delete dir="build"/>
+        <delete dir="graalvm"/>
     </target>
     <target depends="build" name ="makejar" description="Create a jar for the HIME project">
         <jar jarfile="HIME.jar" basedir="build">
@@ -29,5 +33,44 @@
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" srcdir="." destdir="build" includeantruntime="false"/>
+    </target>
+
+    <target name="checkgraalvmarchive">
+        <available file="./graalvm/graalvm-ce-java8-linux-amd64-21.1.0.tar.gz" type="file" property="gralvmarchivefound"/>
+    </target>
+    <target name="fetchgraalvmarchive" unless="gralvmarchivefound">
+        <echo message="fetching GraalVM"/>
+        <exec dir="graalvm" executable="wget" >
+            <arg line="--quiet https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java8-linux-amd64-21.1.0.tar.gz"/>
+        </exec>
+    </target>
+
+    <target name="checkgraalvmunpacked">
+        <available file="./graalvm/graalvm-ce-java8-21.1.0" type="dir" property="gralvmunpacked"/>
+    </target>
+    <target name="unpackgraalvm" unless="gralvmunpacked">
+        <echo message="unpacking GraalVM"/>
+        <exec dir="graalvm" executable="tar" >
+            <arg line="-xzf graalvm-ce-java8-linux-amd64-21.1.0.tar.gz"/>
+        </exec>
+    </target>
+
+
+    <target depends="checkgraalvmarchive, fetchgraalvmarchive, checkgraalvmunpacked, unpackgraalvm" name="getgraalvm">
+    </target>
+    <target depends="makejar, initgraal, getgraalvm" name="makestandalone">
+        <echo message="Setting up GraalVM environment"/>
+
+        <!-- try to install the native image tool -->
+        <exec dir="." executable="bash" >
+            <arg line="-c 'export PATH=./graalvm/graalvm-ce-java8-21.1.0/bin:$PATH; gu install native-image'"/>
+        </exec>
+
+        <echo message="Building standalone binary"/>
+        <exec dir="." executable="bash" >
+            <arg line="-c 'export PATH=./graalvm/graalvm-ce-java8-21.1.0/bin:$PATH; JAVA_HOME=./graalvm/graalvm-ce-java8-21.1.0; native-image --initialize-at-build-time -H:Optimize=2 -jar HIME.jar'"/>
+        </exec>
+
+        <echo message="The final binary is called: HIME"/>
     </target>
 </project>
