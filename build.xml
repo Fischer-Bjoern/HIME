@@ -19,13 +19,13 @@
         <delete dir="build"/>
     </target>
     <target depends="build" name ="makejar" description="Create a jar for the HIME project">
-          <jar jarfile="HIME.jar" basedir="build">
-              <manifest>
-                   <attribute name="Main-Class" value="Run"/>
+        <jar jarfile="HIME.jar" basedir="build">
+            <manifest>
+                <attribute name="Main-Class" value="Run"/>
             </manifest>
-          </jar>
-          <echo message="Creating jar file."/>
-      </target>
+        </jar>
+        <echo message="Creating jar file."/>
+    </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" srcdir="." destdir="build" includeantruntime="false"/>
