@@ -13,7 +13,7 @@ cd HIME/bin
 . demo.sh
 ```
 
-res.txt is the motif discovery result. 
+res.txt is the motif discovery result.
 
 
 ## Output Format
@@ -31,7 +31,7 @@ TO VISUALIZE DEMO IN MATLAB:
 plotVLMotif('demo.txt','res.txt');
 ```
 
-or 
+or
 
 ```bash
 plotVLMotif('demo.txt','res.txt’, [Motif Threshold You Want to Test]);
@@ -89,12 +89,12 @@ grep -i "Motif" tmp.log | cut -d' ' -f 2- > res.txt
 If you found the code is useful, please cite the paper
 
 ```
-  @INPROCEEDINGS{hime2017, 
-                 author={Y. Gao and J. Lin}, 
-                 booktitle={2017 IEEE International Conference on Data Mining (ICDM)}, 
-                 title={Efficient discovery of time series motifs with large length range in million scale time series}, 
-                 year={2017}, 
-                 pages={1213-1222}, 
+  @INPROCEEDINGS{hime2017,
+                 author={Y. Gao and J. Lin},
+                 booktitle={2017 IEEE International Conference on Data Mining (ICDM)},
+                 title={Efficient discovery of time series motifs with large length range in million scale time series},
+                 year={2017},
+                 pages={1213-1222},
                  month={Nov}
                  }
 ```
