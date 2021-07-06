@@ -47,7 +47,7 @@ public class TimeSeriesTokenize {
 	//Counting & Performance Measures
 	public static long lineC=0;
 
-	public static long startTime=System.nanoTime();
+	public static long startTime;
 	public static long lineN=0;
 
 
@@ -90,6 +90,7 @@ public class TimeSeriesTokenize {
 	public TimeSeriesTokenize(String files, int saxWindowSize, int saxPAASize, int saxAlphabetSize,
 			double normalizationThreshold) throws IOException {
 		super();
+        startTime=System.nanoTime();
 		this.files = files;
 		int l=countLines(files);
 		timeseries=new double[l];
