@@ -16,6 +16,27 @@ cd HIME/bin
 res.txt is the motif discovery result.
 
 
+## Build instructions
+
+The program is built with ant.
+
+To build a jar archive run:
+
+```bash
+ant
+```
+
+To build a standalone native binary run:
+
+```bash
+ant makestandalone
+```
+
+Using the standalone native binary is generally not recommended.
+The native binary is significantly slower than running the jar version on a JVM. The reason for that is that the JVM
+is able to leverage profiling data from the execution which the binary version is unable to do.
+
+
 ## Output Format
 
 [Length][Distance][Amount][Best Instance 1 Start Location][Best Instance 1 End Location][Best Instance 2 Start Location][Best Instance 2 End Location][Further Instance Start Location][Further Instance End Location]…[Amounth Instance Start Location][Amounth Instance End Location]
