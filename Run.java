@@ -94,7 +94,8 @@ public class Run {
 			double dmin = 1000000;
 			int p1 = 0;
 			int p2 = 0;
-			for (int c = 0; c < sx.size(); c++) {
+			int c = 0;
+			for (; c < sx.size(); c++) {
 				for (int c2 = c + 1; c2 < sx.size(); c2++) {
 					double d = StatUtils.distance((int) sx.get(c).getStart(), (int) sx.get(c2).getStart(),
 					    Math.min(sx.get(c).getLength(), sx.get(c2).getLength()));
@@ -106,6 +107,16 @@ public class Run {
 				}
 			}
 
+			String furtherMotifInstanceLocations = "";
+			for (int instance = 0; instance < sx.size(); instance++) {
+				if ((instance == p1) || (instance == p2)) {
+					// the best motifs are added separately.
+					continue;
+				}
+
+				furtherMotifInstanceLocations += " " + sx.get(instance).getStart() + " " + sx.get(instance).getEnd();
+			}
+
 			if (dmin >= 1000000)
 				continue;
 
@@ -113,8 +124,11 @@ public class Run {
 
 			if (i % 10000 == 0)
 				System.out.println(i + " Out of " + seed.size());
-			System.out.println("Motif: " + sx.get(p1).getStart() + " " + sx.get(p1).getEnd() + " " + sx.get(p2).getStart()
-			    + " " + sx.get(p2).getEnd() + " " + l + " " + dmin);
+
+			System.out.println(
+				"Motif: " + l + " " + dmin + " " + c + " " + sx.get(p1).getStart() + " " + sx.get(p1).getEnd() + " " +
+				sx.get(p2).getStart() + " " + sx.get(p2).getEnd() + furtherMotifInstanceLocations
+			);
 		}
 	}
 
