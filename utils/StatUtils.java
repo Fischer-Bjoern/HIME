@@ -9,7 +9,7 @@ import interfaces.SAXNode;
 
 /**
  * Functions for finding motifs
- * 
+ *
  * yfeng
  *
  */
@@ -27,33 +27,33 @@ public class StatUtils {
 		return (Ex2 - Ex * Ex / N) / (N - 1);
 	}
 
-	public static double distance(double Ex, double Ey, double Ex2, double Ey2, double Exy, double N) {
-		double sigX = std(Ex, Ex2, N);
-		double sigY = std(Ey, Ey2, N);
+	public static double distance(double Ex, double Ey, double Ex2, double Ey2, double multiplicationSumNonNormInstances, double length) {
+		double sigX = std(Ex, Ex2, length);
+		double sigY = std(Ey, Ey2, length);
 		if (sigX == 0 || sigY == 0)
 			return 100;
 
-		double mX = mean(Ex, N);
-		double mY = mean(Ey, N);
+		double mX = mean(Ex, length);
+		double mY = mean(Ey, length);
 
 		double tmpX = 1 / (sigX * sigX);
 		double tmpY = 1 / (sigY * sigY);
 		double tmpXY = 2 / (sigX * sigY);
 
-		double p1 = tmpX * (Ex2 - 2 * Ex * mX + N * mX * mX);
-		double p2 = tmpY * (Ey2 - 2 * Ey * mY + N * mY * mY);
+		double p1 = tmpX * (Ex2 - 2 * Ex * mX + length * mX * mX);
+		double p2 = tmpY * (Ey2 - 2 * Ey * mY + length * mY * mY);
 		double t1 = mY * Ex;
 		double t2 = mX * Ey;
 
 		double pp2 = -t1 - t2;
-		double pp3 = N * mX * mY;
-		double tmp = p1 + p2 - tmpXY * (pp2 + pp3 + Exy);
+		double pp3 = length * mX * mY;
+		double tmp = p1 + p2 - tmpXY * (pp2 + pp3 + multiplicationSumNonNormInstances);
 		if (tmp < 0) {
 			// Handling the accuracy error caused by fast computing
 			if (Math.abs(tmp) < 0.0000001)
 				tmp = Math.abs(tmp);
 		}
-		return Math.sqrt(p1 + p2 - tmpXY * (pp2 + pp3 + Exy));
+		return Math.sqrt(p1 + p2 - tmpXY * (pp2 + pp3 + multiplicationSumNonNormInstances));
 	}
 
 	public static double tightness = 0.5;
@@ -71,22 +71,22 @@ public class StatUtils {
 		return a;
 	}
 
-	public static double distance(int start1, int start2, int L) {
+	public static double distance(int start1, int start2, int length) {
 		double dist = -1;
-		double Exy = 0;
-		double Ex = TimeSeriesTokenize.x[start1 + L - 1] - TimeSeriesTokenize.x[start1]
+		double multiplicationSumNonNormInstances = 0;
+		double Ex = TimeSeriesTokenize.x[start1 + length - 1] - TimeSeriesTokenize.x[start1]
 		    + TimeSeriesTokenize.timeseries[start1];
-		double Ey2 = TimeSeriesTokenize.x2[start2 + L - 1] - TimeSeriesTokenize.x2[start2]
+		double Ey2 = TimeSeriesTokenize.x2[start2 + length - 1] - TimeSeriesTokenize.x2[start2]
 		    + TimeSeriesTokenize.timeseries[start2] * TimeSeriesTokenize.timeseries[start2];
-		double Ey = TimeSeriesTokenize.x[start2 + L - 1] - TimeSeriesTokenize.x[start2]
+		double Ey = TimeSeriesTokenize.x[start2 + length - 1] - TimeSeriesTokenize.x[start2]
 		    + TimeSeriesTokenize.timeseries[start2];
-		double Ex2 = TimeSeriesTokenize.x2[start1 + L - 1] - TimeSeriesTokenize.x2[start1]
+		double Ex2 = TimeSeriesTokenize.x2[start1 + length - 1] - TimeSeriesTokenize.x2[start1]
 		    + TimeSeriesTokenize.timeseries[start1] * TimeSeriesTokenize.timeseries[start1];
 
-		for (int i = 0; i < L; i++) {
-			Exy += TimeSeriesTokenize.timeseries[start1 + i] * TimeSeriesTokenize.timeseries[start2 + i];
+		for (int i = 0; i < length; i++) {
+			multiplicationSumNonNormInstances += TimeSeriesTokenize.timeseries[start1 + i] * TimeSeriesTokenize.timeseries[start2 + i];
 		}
-		dist = distance(Ex, Ey, Ex2, Ey2, Exy, L);
+		dist = distance(Ex, Ey, Ex2, Ey2, multiplicationSumNonNormInstances, length);
 		return dist;
 	}
 

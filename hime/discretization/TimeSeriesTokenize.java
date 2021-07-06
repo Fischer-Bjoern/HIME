@@ -29,21 +29,21 @@ import interfaces.SAXNode;
 import utils.StatUtils;
 
 /**
- * TimeSeriesTokenize is used for streaming read time series and converts the raw data to discrete tokens 
- * 
+ * TimeSeriesTokenize is used for streaming read time series and converts the raw data to discrete tokens
+ *
  * @author yfeng
  */
 public class TimeSeriesTokenize {
 	double[] buffer;
-	
+
 	//SAX Parameters
 	int saxWindowSize,saxPAASize,saxAlphabetSize,buff=10000;
 
 	double normalizationThreshold;
-	
+
 	//Streaming Read State Variable
 	boolean isEnd=false,isStart=true;
-	
+
 	//Counting & Performance Measures
 	public static long lineC=0;
 
@@ -56,7 +56,7 @@ public class TimeSeriesTokenize {
 	FileInputStream input;
 	BufferedReader reader;
 	String files;
-	
+
 	//Adaptive SAX Table & Time Series Data
 	public static final BatchSAX normalA = new BatchSAX();
 	public static double[] timeseries;
@@ -65,7 +65,7 @@ public class TimeSeriesTokenize {
 	public static double[] x2;
 
 	public double[] xy;
-	
+
 
 	/**
 	 * Conduct streaming discertizing process
@@ -77,30 +77,30 @@ public class TimeSeriesTokenize {
 		if(isEnd)
 			return null;
 		try {
-			timeseries=this.readTS(buff);		
+			timeseries=this.readTS(buff);
 			if(timeseries.length==0)
 				return null;
 			return this.discretize(saxWindowSize, saxPAASize, saxAlphabetSize, normalizationThreshold);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}
 		return null;
 	}
-	
+
 	public TimeSeriesTokenize(String files, int saxWindowSize, int saxPAASize, int saxAlphabetSize,
 			double normalizationThreshold) throws IOException {
 		super();
 		this.files = files;
-		int l=countLines(files); 
+		int l=countLines(files);
 		timeseries=new double[l];
 		x=new double[l];
 		x2=new double[l];
-		
+
 		this.saxWindowSize = saxWindowSize;
 		this.saxPAASize = saxPAASize;
 		this.saxAlphabetSize = saxAlphabetSize;
 		this.normalizationThreshold = normalizationThreshold;
-		
+
 		Path path = Paths.get(files);
 		if (!(Files.exists(path))) {
 			try {
@@ -115,8 +115,8 @@ public class TimeSeriesTokenize {
     InputStreamReader readers = new InputStreamReader(input, decoder);
 		reader =new BufferedReader(readers);
 	}
-	
-	
+
+
 	public static int countLines(String filename) throws IOException {
     InputStream is = new BufferedInputStream(new FileInputStream(filename));
     try {
@@ -125,7 +125,7 @@ public class TimeSeriesTokenize {
         int readChars = 0;
         boolean empty = true;
         while ((readChars = is.read(c)) != -1) {
-        
+
         	empty = false;
             for (int i = 0; i < readChars; ++i) {
                 if (c[i] == '\n') {
@@ -138,10 +138,10 @@ public class TimeSeriesTokenize {
         is.close();
     }
 }
-	
+
 	public double[] readTS(int loadLimit) throws Exception {
-		
-		
+
+
 		try {
 			String line = null;
 			long lineCounter = 0;
@@ -156,7 +156,7 @@ public class TimeSeriesTokenize {
 					value=0;
 				}
 				else
-					value = new BigDecimal(lineSplit[0]).doubleValue();	
+					value = new BigDecimal(lineSplit[0]).doubleValue();
 				timeseries[(int)lineCounter]=value;
 				lineCounter++;
 				/*
@@ -184,13 +184,13 @@ public class TimeSeriesTokenize {
 			assert true;
 		}
 		if (!(timeseries.length==0)) {
-			
+
 			return timeseries;
 		}
 		isEnd=true;
 		return new double[0];
 	}
-		
+
 	public SAXNode discretize(int saxWindowSize, int saxPAASize,
 			int saxAlphabetSize, double normalizationThreshold) throws Exception {
 
@@ -213,7 +213,7 @@ public class TimeSeriesTokenize {
 			x[i]=sum;
 			x2[i]=sum2;
 		}
-		
+
 		if(!isStart)
 		{
 			lineN=lineN-saxWindowSize;
@@ -228,7 +228,7 @@ public class TimeSeriesTokenize {
 			determineAlp();
 		elapsedTime = System.nanoTime() - TimeSeriesTokenize.startTime;
 		System.out.println("Process End: "+elapsedTime / 1.0e9 + " seconds" + " at " + TimeSeriesTokenize.lineC);
-		
+
 		//Computing Streaming Linkage for each word
 		SAXNode head=StreamingLink();
 		SAXNode prev=null;
@@ -250,12 +250,12 @@ public class TimeSeriesTokenize {
 			double Ex=x[i+saxWindowSize-1]-x[i]+timeseries[i];
 			double sig=Math.sqrt((Ex2-Ex*Ex/saxWindowSize)/(saxWindowSize-1));
 			double means=Ex/saxWindowSize;
-	
+
 			int S=saxWindowSize/paat;
-			
+
 			//Note: paa will computed in chunked subsequence. (e.g. given subsequence of 300, paa=32
 			//it actually compute paa in [0 32*9] since floor(300/32) = 9
-			
+
 			if(sig>0 && !Double.isNaN(sig))
 			{
 					for(step=0;step<paat;step++)
@@ -273,9 +273,9 @@ public class TimeSeriesTokenize {
 			{
 				distPAA+=tmp*(paaTest[j]-paa_prev[j])*(paaTest[j]-paa_prev[j]);
 			}
-			
+
 			distPAA=Math.sqrt(distPAA);
-		
+
 			if(distPAA<HIMEFactory.thres*HIMEFactory.ww && pointer.getLoc()-prev.getLoc()<=HIMEFactory.ww-1) {
 								pointer=pointer.neighbor();
 								continue;
@@ -319,9 +319,9 @@ private void determineAlp() {
 		String[] str2 = normalA.get(ComputePAA(start2,HIMEFactory.ww,HIMEFactory.paa)).clone();
 		est_a+=StatUtils.findResolution(str1, str2, rdist);
 		c++;
-		
+
 	  }
-	  
+
 	  HIMEFactory.a=(int)est_a/c;
 	  System.out.println("Adaptive Choosing: "+HIMEFactory.a);
 	}
@@ -422,10 +422,10 @@ ArrayList<SAXNode> ss=new ArrayList<SAXNode>();
 			ss.add(pointer);
 			pointer=pointer.neighbor();
 		}
-		
+
 		return h;
 	}
-	
+
 
 	private void reverselink(SAXNode head) {
 		SAXNode p=null,n;
