@@ -223,11 +223,11 @@ public class TimeSeriesTokenize {
 			isStart=false;
 		}
 		long elapsedTime = System.nanoTime() - TimeSeriesTokenize.startTime;
-		System.out.println("Start Adaptive Parameter Selection a: "+elapsedTime / 1.0e9 + " seconds" + " at " + TimeSeriesTokenize.lineC);
+		System.out.println("Start Adaptive Parameter Selection a: "+elapsedTime / 1.0e9 + " seconds at " + TimeSeriesTokenize.lineC);
 		if(HIMEFactory.adaptive)
 			determineAlp();
 		elapsedTime = System.nanoTime() - TimeSeriesTokenize.startTime;
-		System.out.println("Process End: "+elapsedTime / 1.0e9 + " seconds" + " at " + TimeSeriesTokenize.lineC);
+		System.out.println("Process End: "+elapsedTime / 1.0e9 + " seconds at " + TimeSeriesTokenize.lineC);
 
 		//Computing Streaming Linkage for each word
 		SAXNode head=StreamingLink();
