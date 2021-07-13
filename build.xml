@@ -62,14 +62,15 @@
         <echo message="Setting up GraalVM environment"/>
 
         <!-- try to install the native image tool -->
-        <exec dir="." executable="bash" >
-            <arg line="-c 'export PATH=./graalvm/graalvm-ce-java8-21.1.0/bin:$PATH; gu install native-image'"/>
+        <exec dir="graalvm" executable="bash" >
+            <arg line="-c 'export PATH=./graalvm-ce-java8-21.1.0/bin:$PATH; echo '$PATH'; gu install native-image'"/>
         </exec>
 
         <echo message="Building standalone binary"/>
-        <exec dir="." executable="bash" >
-            <arg line="-c 'export PATH=./graalvm/graalvm-ce-java8-21.1.0/bin:$PATH; JAVA_HOME=./graalvm/graalvm-ce-java8-21.1.0; native-image --initialize-at-build-time -H:Optimize=2 -jar HIME.jar'"/>
+        <exec dir="build" executable="bash" >
+            <arg line="-c 'export PATH=../graalvm/graalvm-ce-java8-21.1.0/bin:$PATH; JAVA_HOME=../graalvm/graalvm-ce-java8-21.1.0; native-image --initialize-at-build-time -H:Optimize=2 -jar ../HIME.jar'"/>
         </exec>
+        <move file="build/HIME" tofile="HIME"/>
 
         <echo message="The final binary is called: HIME"/>
     </target>
